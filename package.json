@@ -1,0 +1,41 @@
+{
+  "name": "fms-admin-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "compile": "./node_modules/.bin/tsc",
+    "start:dev":
+      "nodemon --watch src -e ts --exec 'npm run compile && npm start'",
+    "deploy":
+      "npm run compile && now switch geistinteractive && now -e NODE_ENV=\"production\"",
+    "start": "node ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geistinteractive/fms-admin-api.git"
+  },
+  "keywords": ["filemaker", "admin-server"],
+  "author": "todd@geistinteractive.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geistinteractive/fms-admin-api/issues"
+  },
+  "homepage": "https://github.com/geistinteractive/fms-admin-api#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "compose-middleware": "^4.0.0",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "express-json-error-handler": "^1.1.0",
+    "http-errors": "^1.6.3",
+    "npmlog": "^4.1.2",
+    "temp": "^0.8.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.11.1",
+    "@types/node": "^9.6.1",
+    "typescript": "^2.8.1"
+  }
+}
