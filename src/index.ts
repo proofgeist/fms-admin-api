@@ -1,4 +1,6 @@
 //handle ENV
+import * as https from "https";
+import * as fs from "fs";
 import * as dotenv from "dotenv";
 if (process.env.NODE_ENV != "production") {
   process.env.NODE_ENV = "development";
@@ -7,13 +9,10 @@ if (process.env.NODE_ENV != "production") {
 } else {
   process.env.PORT = "80";
 }
-
 if (!process.env.PORT) {
   process.env.PORT = "3030";
 }
-
 import * as log from "npmlog";
-
 import loadApp from "./app";
 
 //handle the unhandled and the uncaught
@@ -26,15 +25,25 @@ process.on("uncaughtException", err => {
   process.exit(1);
 });
 
-// start app
+const handleListen = err => {
+  if (err) return log.error("", "error on startup", err);
+
+  const message = `listening in ${process.env.NODE_ENV} mode on port ${
+    process.env.PORT
+  }`;
+
+  log.info("server", message);
+};
+
 loadApp().then(app => {
-  app.listen(process.env.PORT, err => {
-    if (err) return log.error("", "error on startup", err);
-
-    const message = `listening in ${process.env.NODE_ENV} mode on port ${
-      process.env.PORT
-    }`;
-
-    log.info("server", message);
-  });
+  if (process.env.NODE_ENV === "production") {
+    const options = {
+      key: fs.readFileSync(process.env.SSL_PRIVATE_KEY),
+      cert: fs.readFileSync(process.env.SSL_CERTIFICATE)
+    };
+    const sslapp = https.createServer(options, app);
+    sslapp.listen(process.env.PORT, handleListen);
+  } else {
+    app.listen(process.env.PORT, handleListen);
+  }
 });
