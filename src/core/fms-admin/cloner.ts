@@ -4,7 +4,7 @@ const path = require("path");
 var temp = require("temp");
 temp.track();
 
-module.exports = (file, user, clone) => {
+export default (file, user, clone) => {
   const cli = fmsadmin(user.name, user.pass);
   const tempDir = temp.mkdirSync("fms-admin-");
 

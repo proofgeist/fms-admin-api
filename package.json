@@ -7,9 +7,10 @@
     "compile": "./node_modules/.bin/tsc",
     "start:dev":
       "nodemon --watch src -e ts --exec 'npm run compile && npm start'",
-    "deploy":
+    "deploy:now":
       "npm run compile && now switch geistinteractive && now -e NODE_ENV=\"production\"",
-    "start": "node ./"
+    "start": "node ./",
+    "start:pm2": "npm run compile && pm2 start ./"
   },
   "repository": {
     "type": "git",

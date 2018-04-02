@@ -14,17 +14,7 @@ if (!process.env.PORT) {
 
 import * as log from "npmlog";
 
-// start app
-import app from "./app";
-app.listen(process.env.PORT, err => {
-  if (err) return log.error("", "error on startup", err);
-
-  const message = `listening in ${process.env.NODE_ENV} mode on port ${
-    process.env.PORT
-  }`;
-
-  log.info("", message);
-});
+import loadApp from "./app";
 
 //handle the unhandled and the uncaught
 process.on("unhandledRejection", (err, promise) => {
@@ -34,4 +24,17 @@ process.on("unhandledRejection", (err, promise) => {
 process.on("uncaughtException", err => {
   log.error("", "Uncaught Exception: " + err.message, err);
   process.exit(1);
+});
+
+// start app
+loadApp().then(app => {
+  app.listen(process.env.PORT, err => {
+    if (err) return log.error("", "error on startup", err);
+
+    const message = `listening in ${process.env.NODE_ENV} mode on port ${
+      process.env.PORT
+    }`;
+
+    log.info("server", message);
+  });
 });

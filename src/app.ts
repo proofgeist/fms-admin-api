@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as cors from "cors";
 import * as bodyParser from "body-parser";
-//import routes from "./routes";
+import { LoadCore } from "./core";
 import jsonErrorHandler from "express-json-error-handler";
 import * as log from "npmlog";
 
@@ -10,15 +10,16 @@ const errorLog = (err, req, res) => {
 };
 
 const app = express();
+app.set("log", log);
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/ping", (req, res) => {
-  res.send("pong");
-});
+const appLoader = async () => {
+  await LoadCore(app);
 
-//app.use(routes);
-app.use(jsonErrorHandler({ log: errorLog }));
+  app.use(jsonErrorHandler({ log: errorLog }));
+  return app;
+};
 
-export default app;
+export default appLoader;
