@@ -36,14 +36,20 @@ const handleListen = err => {
 };
 
 loadApp().then(app => {
-  if (process.env.NODE_ENV === "production") {
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.SSL_PRIVATE_KEY &&
+    process.env.SSL_CERTIFICATE
+  ) {
     const options = {
       key: fs.readFileSync(process.env.SSL_PRIVATE_KEY),
       cert: fs.readFileSync(process.env.SSL_CERTIFICATE)
     };
     const sslapp = https.createServer(options, app);
+    log.info("server", "SSL ON");
     sslapp.listen(process.env.PORT, handleListen);
   } else {
+    log.info("server", "SSL OFF");
     app.listen(process.env.PORT, handleListen);
   }
 });
